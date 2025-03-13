@@ -1,0 +1,12 @@
+-- Converted from no channel attributed
+
+
+select date_trunc(t1.date, month) as month,
+t1.default_channel_grouping,
+count(distinct t1.transaction_id) as transactions,
+from `tpw-data-warehouse.data_lake.server_side_events_transactions` t1
+inner join `tpw-data-warehouse.data_marts.transactions` t2 on t1.transaction_id = t2.transaction_id
+where t2.country = 'UK'
+group by month,
+default_channel_grouping
+order by month desc, transactions desc;
