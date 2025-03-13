@@ -1,0 +1,16 @@
+-- Customers acquired through different sources 
+
+select
+distinct transaction_id 
+acquisition_default_channel_grouping,
+-- case when transaction_count >= 20 then "20+" else cast(transaction_count as string) end as transaction_buckets,
+count(distinct email_address)
+from `data_marts.transaction_products`
+where  1=1
+and transaction_date between "2024-09-01" and "2025-03-11"
+and default_channel_grouping = 'Direct'
+and country = "UK"
+-- and config_sku = "POWWP360EX"
+-- and transaction_count > 1
+group by acquisition_default_channel_grouping
+order by acquisition_default_channel_grouping asc
