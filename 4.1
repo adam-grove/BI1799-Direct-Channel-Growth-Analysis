@@ -1,0 +1,25 @@
+-- Acquired through Direct Transaction Count Buckets with Channels
+
+with acquired_direct_customers as 
+(
+  select 
+  email_address
+  from `data_marts.transactions`
+  where  1=1
+  and date between "2024-09-01" and "2025-03-11"
+  and default_channel_grouping = 'Direct'
+  and country = "UK"
+  and transaction_count = 1
+),
+email_address_with_counts as 
+(
+select t1.email_address,default_channel_grouping, transaction_count
+from `data_marts.transactions`t1
+inner join  acquired_direct_customers t2
+  on t1.email_address = t2.email_address
+)
+
+select transaction_count, default_channel_grouping, count(distinct email_address)
+from email_address_with_counts
+group by transaction_count, default_channel_grouping
+order by transaction_count asc, default_channel_grouping asc
